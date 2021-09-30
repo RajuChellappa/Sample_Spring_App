@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class UserManagementController {
@@ -34,8 +35,8 @@ public class UserManagementController {
     @PostMapping(value = "/validate/user")
     public ResponseEntity<?> userValidation(@RequestBody UserValidationRequest userValidationRequest) {
         try {
-            if (userValidationRequest != null && userValidationRequest.getEmail() != null
-                    && userValidationRequest.getPassword() != null)
+            if (userValidationRequest.getEmail() == null
+                    || Objects.requireNonNull(userValidationRequest).getPassword() == null)
                 return new ResponseEntity<>("Email and password should be need for user validation!", HttpStatus.BAD_REQUEST);
             if (userManagementService.authenticate(userValidationRequest))
                 return new ResponseEntity<>("You are logged in to use our services", HttpStatus.OK);
